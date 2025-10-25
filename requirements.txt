@@ -1,0 +1,14 @@
+streamlit
+tensorflow
+numpy
+Pillow
+keras
+opencv-python
+flask==3.0.0
+flask-cors==4.0.0
+groq>=0.4.0
+httpx>=0.24.0
+SpeechRecognition==3.10.0
+pydub==0.25.1
+python-dotenv
+mediapipe==0.10.9

@@ -1,0 +1,114 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+ai/
+.conda/
+*.egg-info/
+.pytest_cache/
+.coverage
+*.pyc
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Node.js / Frontend
+node_modules/
+dist/
+build/
+.cache/
+.vite/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+
+# IDE / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+
+# Claude / AI Assistant
+.claude/
+.aider*
+.cursor/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Large model files (uncomment if not needed in repo)
+# *.keras
+# *.h5
+# *.pkl
+# *.pt
+# *.pth
+
+# Screenshots and temporary files
+*.png
+*.jpg
+*.jpeg
+!frontend/public/*.png
+!frontend/public/*.jpg
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Build outputs
+*.egg
+*.egg-info
+dist/
+build/
+*.whl
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Misc
+.cache
+*.bak
+*.swp
+*.swo
+.tmp/
+temp/
