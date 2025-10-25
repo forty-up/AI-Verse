@@ -50,30 +50,35 @@ print("[INFO] Checking for model files...")
 import requests
 from pathlib import Path
 
-# Get Hugging Face configuration from environment
-HF_USERNAME = os.getenv('HF_USERNAME', 'forty-up')  # Default to your username
-HF_REPO = os.getenv('HF_REPO', 'emotion-detection-models')
+# Get model URLs from environment variables
+MODEL_URL_CNN = os.getenv('MODEL_URL_CNN')
+MODEL_URL_RESNET = os.getenv('MODEL_URL_RESNET')
 
-model_files = [
-    'ResNet50_Final_Model_Complete.keras',
-    'Final_Resnet50_Best_model.keras',
-    'Custom_CNN_model.keras'
-]
+# Map model files to their download URLs
+model_downloads = {
+    'Custom_CNN_model.keras': MODEL_URL_CNN,
+    'Final_Resnet50_Best_model.keras': MODEL_URL_RESNET,
+    'ResNet50_Final_Model_Complete.keras': MODEL_URL_RESNET  # Use same ResNet model
+}
+
+model_files = list(model_downloads.keys())
 
 # Download models if they don't exist
 project_root = os.path.join(os.path.dirname(__file__), '..')
-for model_file in model_files:
+for model_file, download_url in model_downloads.items():
     model_path = os.path.join(project_root, model_file)
 
     if not os.path.exists(model_path):
+        if not download_url:
+            print(f"[WARNING] No download URL provided for {model_file}, skipping...")
+            continue
+
         print(f"[INFO] Model {model_file} not found locally, downloading from Hugging Face...")
         try:
-            # Hugging Face model URL
-            url = f"https://huggingface.co/{HF_USERNAME}/{HF_REPO}/resolve/main/{model_file}"
-            print(f"[INFO] Downloading from: {url}")
+            print(f"[INFO] Downloading from: {download_url[:60]}...")
 
             # Download with streaming to handle large files
-            response = requests.get(url, stream=True, timeout=300)
+            response = requests.get(download_url, stream=True, timeout=600)
             response.raise_for_status()
 
             # Save to file
@@ -86,8 +91,10 @@ for model_file in model_files:
                     if chunk:
                         f.write(chunk)
                         downloaded += len(chunk)
-                        if total_size > 0 and downloaded % (10 * 1024 * 1024) == 0:  # Log every 10MB
-                            print(f"[INFO] Downloaded {downloaded / (1024*1024):.1f} / {total_size / (1024*1024):.1f} MB")
+                        # Log progress every 50MB
+                        if total_size > 0 and downloaded % (50 * 1024 * 1024) < 8192:
+                            progress = (downloaded / total_size) * 100
+                            print(f"[INFO] Progress: {progress:.1f}% ({downloaded / (1024*1024):.1f}/{total_size / (1024*1024):.1f} MB)")
 
             print(f"[SUCCESS] Downloaded {model_file}")
         except Exception as e:
