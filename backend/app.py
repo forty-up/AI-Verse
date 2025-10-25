@@ -45,14 +45,60 @@ interview_service = InterviewService(api_key=api_key)
 from facial_analysis_service import FacialAnalysisService
 facial_analysis_service = FacialAnalysisService()
 
-# Load the emotion detection model
-print("[INFO] Loading emotion detection model...")
-# Try loading different models and test them with a dummy prediction
+# Download models from Hugging Face if not present
+print("[INFO] Checking for model files...")
+import requests
+from pathlib import Path
+
+# Get Hugging Face configuration from environment
+HF_USERNAME = os.getenv('HF_USERNAME', 'forty-up')  # Default to your username
+HF_REPO = os.getenv('HF_REPO', 'emotion-detection-models')
+
 model_files = [
     'ResNet50_Final_Model_Complete.keras',
     'Final_Resnet50_Best_model.keras',
     'Custom_CNN_model.keras'
 ]
+
+# Download models if they don't exist
+project_root = os.path.join(os.path.dirname(__file__), '..')
+for model_file in model_files:
+    model_path = os.path.join(project_root, model_file)
+
+    if not os.path.exists(model_path):
+        print(f"[INFO] Model {model_file} not found locally, downloading from Hugging Face...")
+        try:
+            # Hugging Face model URL
+            url = f"https://huggingface.co/{HF_USERNAME}/{HF_REPO}/resolve/main/{model_file}"
+            print(f"[INFO] Downloading from: {url}")
+
+            # Download with streaming to handle large files
+            response = requests.get(url, stream=True, timeout=300)
+            response.raise_for_status()
+
+            # Save to file
+            total_size = int(response.headers.get('content-length', 0))
+            print(f"[INFO] File size: {total_size / (1024*1024):.1f} MB")
+
+            with open(model_path, 'wb') as f:
+                downloaded = 0
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+                        downloaded += len(chunk)
+                        if total_size > 0 and downloaded % (10 * 1024 * 1024) == 0:  # Log every 10MB
+                            print(f"[INFO] Downloaded {downloaded / (1024*1024):.1f} / {total_size / (1024*1024):.1f} MB")
+
+            print(f"[SUCCESS] Downloaded {model_file}")
+        except Exception as e:
+            print(f"[WARNING] Failed to download {model_file}: {str(e)}")
+            continue
+    else:
+        print(f"[INFO] Model {model_file} found locally")
+
+# Load the emotion detection model
+print("[INFO] Loading emotion detection model...")
+# Try loading different models and test them with a dummy prediction
 
 model = None
 loaded_model_name = None
