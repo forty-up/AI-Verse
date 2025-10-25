@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: emotion-detection-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9
+      - key: HF_USERNAME
+        sync: false  # Add this in Render dashboard
+      - key: GROQ_API_KEY
+        sync: false  # Add this in Render dashboard
+    healthCheckPath: /api/health
