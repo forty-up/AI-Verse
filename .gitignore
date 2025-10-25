@@ -71,12 +71,12 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# Large model files (uncomment if not needed in repo)
-# *.keras
-# *.h5
-# *.pkl
-# *.pt
-# *.pth
+# Large model files (excluded due to GitHub size limits)
+*.keras
+*.h5
+*.pkl
+*.pt
+*.pth
 
 # Screenshots and temporary files
 *.png
