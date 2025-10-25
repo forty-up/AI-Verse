@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Webcam from 'react-webcam'
 import { Mic, MicOff, ArrowRight, CheckCircle, Clock, Brain } from 'lucide-react'
 import axios from 'axios'
+import { API_ENDPOINTS } from '../config/api'
 
 const InterviewInterface = ({ interviewData, onComplete }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -199,7 +200,7 @@ const InterviewInterface = ({ interviewData, onComplete }) => {
       if (!imageSrc) return
 
       try {
-        const response = await axios.post('http://localhost:5000/api/detect', {
+        const response = await axios.post(API_ENDPOINTS.detect, {
           image: imageSrc
         })
 
@@ -258,7 +259,7 @@ const InterviewInterface = ({ interviewData, onComplete }) => {
 
     try {
       // Score the answer
-      const response = await axios.post('http://localhost:5000/api/interview/score-answer', {
+      const response = await axios.post(API_ENDPOINTS.interview.score, {
         question: currentQuestion.question,
         answer: currentAnswer,
         question_type: currentQuestion.type,
@@ -344,7 +345,7 @@ const InterviewInterface = ({ interviewData, onComplete }) => {
         score: a.evaluation.score
       }))
 
-      const response = await axios.post('http://localhost:5000/api/interview/overall-feedback', {
+      const response = await axios.post(API_ENDPOINTS.interview.feedback, {
         role: interviewData.role,
         questions_and_scores: questionsAndScores,
         emotion_data: emotionData
