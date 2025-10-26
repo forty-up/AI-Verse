@@ -60,9 +60,9 @@ const InterviewInterface = ({ interviewData, onComplete }) => {
     const color = colors[emotion] || '#8A63D2'
 
     // Draw label at top center
-    const emoji = emotion === 'Happy' ? '😊' : emotion === 'Neutral' ? '😐' : emotion === 'Sad' ? '😢' :
-                  emotion === 'Angry' ? '😠' : emotion === 'Surprise' ? '😲' : emotion === 'Fear' ? '😨' : '🤢'
-    const label = `${emoji} ${emotion} ${(confidence * 100).toFixed(0)}%`
+    // const emoji = emotion === 'Happy' ? '😊' : emotion === 'Neutral' ? '😐' : emotion === 'Sad' ? '😢' :
+    //               emotion === 'Angry' ? '😠' : emotion === 'Surprise' ? '😲' : emotion === 'Fear' ? '😨' : '🤢'
+    // const label = `${emoji} ${emotion} ${(confidence * 100).toFixed(0)}%`
     ctx.font = 'bold 20px Arial'
     const textWidth = ctx.measureText(label).width
 

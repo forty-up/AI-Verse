@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Briefcase, FileText, Award, ArrowRight, Sparkles } from 'lucide-react'
+import { API_ENDPOINTS } from '../config/api'
 
 const InterviewSetup = ({ onStart }) => {
   const [formData, setFormData] = useState({
