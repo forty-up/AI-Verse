@@ -6,6 +6,7 @@ import axios from 'axios'
 import EmotionResults from './EmotionResults'
 import ComprehensiveFeedback from './ComprehensiveFeedback'
 import { analyzeSession } from '../utils/feedbackAnalyzer'
+import { API_ENDPOINTS } from '../config/api'
 
 function EmotionDetector({ onBack }) {
   const webcamRef = useRef(null)
@@ -90,7 +91,7 @@ function EmotionDetector({ onBack }) {
             }
 
             console.log('Sending image to backend...')
-            const response = await axios.post('/api/detect', {
+            const response = await axios.post(API_ENDPOINTS.detect, {
               image: imageSrc
             }, {
               timeout: 5000 // 5 second timeout
@@ -164,7 +165,7 @@ function EmotionDetector({ onBack }) {
     // Test backend connection first
     try {
       console.log('Testing backend connection...')
-      const healthCheck = await axios.get('/api/health', { timeout: 3000 })
+      const healthCheck = await axios.get(API_ENDPOINTS.health, { timeout: 3000 })
       console.log('Backend health check:', healthCheck.data)
 
       if (healthCheck.data.status === 'healthy') {

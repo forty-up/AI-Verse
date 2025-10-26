@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Play, Pause, RotateCcw, Trophy, Star, Heart, Shield, Zap } from 'lucide-react'
 import Webcam from 'react-webcam'
 import axios from 'axios'
+import { API_ENDPOINTS } from '../config/api'
 
 function EmotionGameEnhanced({ onBack }) {
   const canvasRef = useRef(null)
@@ -125,7 +126,7 @@ function EmotionGameEnhanced({ onBack }) {
         const imageSrc = webcamRef.current.getScreenshot()
         if (imageSrc) {
           try {
-            const response = await axios.post('/api/detect', {
+            const response = await axios.post(API_ENDPOINTS.detect, {
               image: imageSrc
             })
 
