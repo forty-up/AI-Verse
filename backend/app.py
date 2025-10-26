@@ -231,7 +231,9 @@ def detect_emotion():
     """Detect emotions from base64 encoded image"""
     try:
         # Lazy load model on first request
+        print("[INFO] Loading emotion model...")
         emotion_model, is_grayscale = load_emotion_model()
+        print("[INFO] Model loaded successfully")
 
         data = request.get_json()
 
@@ -251,7 +253,19 @@ def detect_emotion():
         grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Perform facial analysis with MediaPipe
-        facial_analysis = facial_analysis_service.analyze_frame(frame)
+        print("[INFO] Running facial analysis...")
+        try:
+            facial_analysis = facial_analysis_service.analyze_frame(frame)
+            print("[INFO] Facial analysis completed")
+        except Exception as fa_error:
+            print(f"[WARNING] Facial analysis failed: {str(fa_error)}")
+            # Continue without facial analysis
+            facial_analysis = {
+                'eye_contact': 0,
+                'confidence_score': 0,
+                'engagement_score': 0,
+                'head_pose': {'pitch': 0, 'yaw': 0, 'roll': 0}
+            }
 
         # Detect faces
         faces = face_cascade.detectMultiScale(
@@ -318,8 +332,12 @@ def detect_emotion():
         })
 
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"[ERROR] Error in /api/detect endpoint:")
         print(f"[ERROR] {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        print(f"[ERROR] Traceback:\n{error_details}")
+        return jsonify({'error': str(e), 'details': 'Check server logs for more information'}), 500
 
 @app.route('/api/emotions', methods=['GET'])
 def get_emotions():
