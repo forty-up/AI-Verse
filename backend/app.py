@@ -160,9 +160,21 @@ def load_emotion_model():
         # Download model if needed
         model_path = download_model_if_needed()
 
-        # Load the model
+        # Load the model with compatibility settings
         print(f"[INFO] Loading {MODEL_FILE}...")
-        loaded_model = load_model(model_path)
+        try:
+            # Try loading with compile=False and safe_mode=False for better compatibility
+            loaded_model = load_model(model_path, compile=False, safe_mode=False)
+            print(f"[INFO] Model loaded successfully (compile=False, safe_mode=False)")
+        except Exception as load_error:
+            print(f"[WARNING] Failed with safe_mode=False: {str(load_error)}")
+            try:
+                # Fallback: try with just compile=False
+                loaded_model = load_model(model_path, compile=False)
+                print(f"[INFO] Model loaded successfully (compile=False)")
+            except Exception as load_error2:
+                print(f"[ERROR] Failed to load model: {str(load_error2)}")
+                raise
 
         # Test with RGB input (ResNet50 typically uses RGB)
         print(f"[INFO] Testing model with RGB input...")
